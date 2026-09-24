@@ -562,27 +562,46 @@ function isPanelUrl(url) {
   return typeof url === 'string' && url.split('#')[0].split('?')[0].endsWith(PANEL_PATH);
 }
 
-/** 查找已经打开的面板（弹窗型窗口优先，其次标签页），找到就聚焦 */
+/**
+ * 查找已经打开的面板窗口，找到就聚焦。
+ *
+ * 这里刻意不用 tab.url 判断 —— 收窄权限后没有 tabs 权限，tab.url 会是 undefined。
+ * 改用 runtime.getContexts()：它能列出我们扩展自己的页面，不需要任何权限，
+ * 也不受 URL 读取限制影响。
+ */
 async function focusExistingPanel() {
   try {
+    if (!chrome.runtime.getContexts) return false;
+    var ctxs = await chrome.runtime.getContexts({
+      contextTypes: ['TAB'],
+      documentUrls: [chrome.runtime.getURL(PANEL_PATH)]
+    });
+    if (!ctxs.length) return false;
+
     var wins = await chrome.windows.getAll({ windowTypes: ['popup'] });
-    for (var i = 0; i < wins.length; i++) {
-      var tabs = await chrome.tabs.query({ windowId: wins[i].id });
-      for (var j = 0; j < tabs.length; j++) {
-        if (isPanelUrl(tabs[j].url)) {
-          panelWindowId = wins[i].id;
-          panelTabId = null;
-          await chrome.windows.update(wins[i].id, { focused: true, drawAttention: true });
-          return true;
+    var tabs = await chrome.tabs.query({});
+    for (var i = 0; i < ctxs.length; i++) {
+      var tabId = ctxs[i].tabId;
+      if (tabId === undefined || tabId < 0) continue;
+      var tab = tabs.filter(function (t) {
+        return t.id === tabId;
+      })[0];
+      if (!tab) continue;
+      var isPopup = wins.some(function (w) {
+        return w.id === tab.windowId;
+      });
+      if (isPopup) {
+        panelWindowId = tab.windowId;
+        panelTabId = null;
+        try {
+          await chrome.windows.update(tab.windowId, { focused: true, drawAttention: true });
+        } catch (e) {
+          /* ignore */
         }
+        return true;
       }
-    }
-    var opened = await chrome.tabs.query({ url: chrome.runtime.getURL(PANEL_PATH) });
-    if (opened.length && opened[0].id) {
-      panelTabId = opened[0].id;
-      panelWindowId = opened[0].windowId;
-      await chrome.tabs.update(opened[0].id, { active: true });
-      return true;
+      // 面板开在普通标签页里（极少见）：需要 tabs 权限才能把它切到前台，
+      // 没有权限时就不强行操作，交给后面新建一个窗口
     }
   } catch (e) {
     /* ignore */

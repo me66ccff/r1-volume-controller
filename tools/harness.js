@@ -422,10 +422,22 @@ function createHarness(options) {
       }
     };
 
+    // 同时支持两类查询：
+    //   OFFSCREEN_DOCUMENT -> 连接桥是否存在
+    //   TAB                -> 面板是否已经打开（没有 tabs 权限时用它替代 tab.url）
     api.runtime.getContexts = (filter) => {
+      const types = (filter && filter.contextTypes) || [];
       const urls = (filter && filter.documentUrls) || [];
-      const hit = aliveDocs().some((d) => !urls.length || urls.some((u) => u.indexOf('offscreen') >= 0));
-      return Promise.resolve(hit ? [{ contextType: 'OFFSCREEN_DOCUMENT' }] : []);
+
+      if (types.indexOf('TAB') >= 0) {
+        const hit = panelTabs.filter((t) => !urls.length || urls.some((u) => t.url === u));
+        return Promise.resolve(
+          hit.map((t) => ({ contextType: 'TAB', tabId: t.id, windowId: t.windowId, documentUrl: t.url }))
+        );
+      }
+
+      const alive = aliveDocs().some((d) => !urls.length || urls.some((u) => u.indexOf('offscreen') >= 0));
+      return Promise.resolve(alive ? [{ contextType: 'OFFSCREEN_DOCUMENT' }] : []);
     };
 
     api.alarms = {
