@@ -3,7 +3,7 @@
  *
  * 职责：
  *  1. 保证屏幕外文档（offscreen document）唯一存在 —— 那是全局唯一的一条设备连接；
- *  2. 所有 UI（弹窗 / 悬浮面板 / 设置页 / 网页悬浮球）都必须通过这里下发指令，
+ *  2. 所有 UI（弹窗 / 悬浮面板 / 设置页）都必须通过这里下发指令，
  *     因此永远不会出现两个界面互相打架的情况；
  *  3. 开机自启、定时保活、把状态同步给所有已打开的界面；
  *  4. 图标角标实时显示音量，键盘快捷键直接调音。
@@ -548,24 +548,8 @@ function publicState() {
 
 async function broadcast() {
   var state = publicState();
-  var tasks = [];
   // 扩展页面（弹窗 / 悬浮面板 / 设置页）
-  tasks.push(
-    chrome.runtime.sendMessage({ target: 'ui', type: 'state', state: state }).catch(function () {})
-  );
-  // 网页里的悬浮球
-  try {
-    var tabs = await chrome.tabs.query({});
-    tabs.forEach(function (tab) {
-      if (!tab.id || !tab.url || !/^https?:/i.test(tab.url)) return;
-      tasks.push(
-        chrome.tabs.sendMessage(tab.id, { target: 'content', type: 'state', state: state }).catch(function () {})
-      );
-    });
-  } catch (e) {
-    /* ignore */
-  }
-  await Promise.all(tasks);
+  await chrome.runtime.sendMessage({ target: 'ui', type: 'state', state: state }).catch(function () {});
 }
 
 /* ------------------------------------------------------------------ 面板窗口（全局唯一） */
@@ -647,16 +631,7 @@ async function openPanel() {
     panelTabId = null;
     return 'opened';
   } catch (e) {
-    /* 继续尝试弹窗 */
-  }
-  // 普通网页里的悬浮球不能开独立窗口，退化为直接弹出工具栏弹窗（同一套界面）
-  try {
-    if (chrome.action.openPopup) {
-      await chrome.action.openPopup();
-      return 'popup';
-    }
-  } catch (e) {
-    /* ignore */
+    /* 独立窗口开不出来（极少见），退化为标签页 */
   }
   try {
     var tab = await chrome.tabs.create({ url: chrome.runtime.getURL(PANEL_PATH) });
@@ -914,14 +889,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   }
 
   // 屏幕外文档发给界面的广播
-  if (msg.target === 'ui' || msg.target === 'content') return false;
-
-  if (msg.type === 'toast') {
-    // 来自网页悬浮球的操作反馈
-    announce(msg.label);
-    sendResponse({ ok: true });
-    return false;
-  }
+  if (msg.target === 'ui') return false;
 
   // 后台自检：界面能拿到「卡在哪一步」的完整快照
   if (msg.type === 'diag') {

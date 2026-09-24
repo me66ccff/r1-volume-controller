@@ -35,7 +35,6 @@
     step: 1, // 单次增减步长
     autoConnect: true, // 浏览器启动后自动连接
     rememberVolume: true, // 恢复上次音量
-    showOrb: false, // 是否在普通网页右下角显示悬浮球
     confirmConnect: true, // 连接前先做一次握手确认
     theme: 'dark'
   };

@@ -47,11 +47,6 @@
             <span class="switch__ui"></span>
             <span class="switch__text"><b>随浏览器启动自动连接</b><i>打开浏览器就接管音箱，不用点任何东西</i></span>
           </label>
-          <label class="switch">
-            <input type="checkbox" id="showOrb" />
-            <span class="switch__ui"></span>
-            <span class="switch__text"><b>在网页右下角显示悬浮球</b><i>任意网页点一下就能调音（默认关闭，避免打扰）</i></span>
-          </label>
           <div class="field">
             <div class="label">音量步长（上下按钮 / 快捷键每次增减几级）</div>
             <div class="chips" id="stepChips"></div>
@@ -116,7 +111,7 @@
             <code>get_info</code> 读取状态、<code>max_vol</code> 读取上限、<code>set_vol</code> 设置音量。
           </p>
           <ul class="about about--list">
-            <li>全局唯一：所有入口（弹窗 / 悬浮面板 / 悬浮球 / 快捷键）都走同一条连接与同一个队列，不会互相打架。</li>
+            <li>全局唯一：所有入口（弹窗 / 悬浮面板 / 快捷键）都走同一条连接与同一个队列，不会互相打架。</li>
             <li>开机即用：连接跑在屏幕外文档里，浏览器启动后自动重连，图标角标实时显示音量。</li>
             <li>隐私：扩展只与你在上面填写的音箱地址通信，不发送任何数据到互联网。</li>
           </ul>

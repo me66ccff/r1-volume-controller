@@ -22,7 +22,6 @@
     log: $('log'),
     findings: $('findings'),
     autoConnect: $('autoConnect'),
-    showOrb: $('showOrb'),
     stepChips: $('stepChips'),
     maxVol: $('maxVol'),
     btnSaveMax: $('btnSaveMax'),
@@ -86,7 +85,6 @@
   function paintSettings() {
     if (document.activeElement !== el.ip) el.ip.value = settings.ip || '';
     el.autoConnect.checked = !!settings.autoConnect;
-    el.showOrb.checked = !!settings.showOrb;
     el.wantIp.textContent = settings.ip ? '当前：' + settings.ip : '例如 192.168.1.12';
     if (document.activeElement !== el.maxVol) el.maxVol.value = String(state.device.max || C.DEFAULT_MAX_VOL);
     Array.prototype.forEach.call(el.stepChips.children, function (chip) {
@@ -283,12 +281,6 @@
 
   el.autoConnect.addEventListener('change', function () {
     save({ autoConnect: el.autoConnect.checked });
-  });
-
-  el.showOrb.addEventListener('change', function () {
-    save({ showOrb: el.showOrb.checked }).then(function () {
-      say(el.showOrb.checked ? '悬浮球已开启，刷新网页即可看到' : '悬浮球已关闭');
-    });
   });
 
   el.btnSaveMax.addEventListener('click', function () {

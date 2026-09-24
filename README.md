@@ -73,7 +73,6 @@
 **面板与入口**
 - 工具栏弹窗：完整控制面板
 - 悬浮面板（`Alt+Shift+V` 或弹窗右上角 ✨）：独立小窗口，可拖动，带完整设备信息与「重启服务」
-- 网页悬浮球（默认关闭，设置里开启）：任意网页右下角的音量球，点一下弹出迷你 HUD，可拖动、双击复位
 
 **健壮性**
 - 断线自动重连（0.9s → 30s 指数退避），开机自启，`chrome.alarms` 每 30 秒保活
@@ -88,7 +87,7 @@
 | 关注点 | 实现 |
 | --- | --- |
 | 唯一连接 | 连接只存在于 **唯一的屏幕外文档**（offscreen document）中；service worker 每次唤醒都会先 `chrome.runtime.getContexts` 检查，绝不会创建第二条连接 |
-| 唯一指令队列 | 所有界面（弹窗/悬浮面板/悬浮球/快捷键）都只能通过 service worker 下发指令，执行时统一节流、统一回读，不会两个界面互相覆盖 |
+| 唯一指令队列 | 所有界面（弹窗/悬浮面板/快捷键）都只能通过 service worker 下发指令，执行时统一节流、统一回读，不会两个界面互相覆盖 |
 | 唯一状态源 | 状态只由 offscreen 广播给 service worker，再 fan-out 给所有已打开的界面，界面之间永远同步 |
 | 唯一悬浮面板 | 打开面板前会先查找已存在的面板窗口，存在则聚焦，不会开出第二个 |
 
@@ -96,7 +95,7 @@
 
 ```
 r1-volume-extension/
-├─ manifest.json                 MV3 清单（快捷键、内容脚本、权限）
+├─ manifest.json                 MV3 清单（快捷键、权限）
 ├─ icons/                        图标（由 tools/make-icons.js 生成）
 ├─ src/
 │  ├─ background/service-worker.js  状态中枢：唯一连接、指令路由、角标、保活
@@ -108,16 +107,15 @@ r1-volume-extension/
 │  │  └─ ui.css                  共享视觉样式
 │  ├─ popup/                     工具栏弹窗
 │  ├─ panel/                     悬浮控制面板（独立窗口）
-│  ├─ options/                   设置页 + 同网段扫描器
-│  └─ content/                   网页悬浮球 + 迷你 HUD
+│  └─ options/                   设置页 + 同网段扫描器
 └─ tools/
    ├─ check.js                   自检：语法、资源引用、manifest、重复 id、[hidden] 规则、HTML/JS id 核对
    ├─ harness.js                 测试脚手架：假 chrome.* API，能跑真实的 service worker + 屏幕外文档
    ├─ test-protocol.js           协议与状态逻辑单元测试（52 项）
    ├─ test-ui.js                 UI 组件回归测试（18 项：指令去重、方向键不重复生效）
    ├─ test-bridge.js             连接桥集成测试（26 项：假 WebSocket，含静音链路）
-   ├─ test-worker.js             全链路测试（40 项：启动竞态、僵尸文档、自动重建、面板唯一性）
-   ├─ test-faults.js             故障注入测试（13 项：连接桥装死、storage 卡死、诊断接口）
+   ├─ test-worker.js             全链路测试（39 项：启动竞态、僵尸文档、自动重建、面板唯一性）
+   ├─ test-faults.js             故障注入测试（39 项：连接桥装死、storage 缺失、旧版桥、诊断接口）
    ├─ live-test.js               真机联调（不需要装扩展）
    └─ make-icons.js              重新生成图标
 ```
@@ -141,7 +139,7 @@ node tools/make-icons.js      # 重新生成图标
 只有在这种双上下文环境里才复现得出来；单独测某一个文件永远测不到。
 
 改完代码后在 `chrome://extensions/` 点该扩展的 **重新加载** 即可生效；
-只改了 `src/content/` 的悬浮球脚本时，刷新目标网页即可。
+**已经打开的弹窗/设置页是独立页面，需要重新打开才会更新**。
 
 ## 六、常见问题
 
@@ -153,9 +151,6 @@ node tools/make-icons.js      # 重新生成图标
 
 **音量调了但界面又跳回去**
 设备会把音量钳制到自己的上限（通常是 15）。界面会以设备回读值为准，这是正常的。
-
-**悬浮球不见了**
-默认关闭。设置页打开「在网页右下角显示悬浮球」后，刷新网页即可看到。
 
 **快捷键没反应**
 快捷键可能与其他扩展冲突，去 `chrome://extensions/shortcuts` 改绑（设置页有直达按钮）。
