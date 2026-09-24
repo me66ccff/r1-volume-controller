@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R1 音箱音量控制器</title>
+    <link rel="stylesheet" href="../common/ui.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body class="popup">
+    <div class="r1-app" id="app" data-state="disabled">
+      <div class="stack">
+        <header class="top">
+          <div class="top__id">
+            <div class="logo" data-icon="volume"></div>
+            <div class="top__text">
+              <div class="top__name" id="deviceName">R1 音箱</div>
+              <div class="top__meta">
+                <span class="dot" id="dot"></span>
+                <span id="statusText">正在初始化…</span>
+                <span class="spin" id="spin"></span>
+              </div>
+            </div>
+          </div>
+          <button class="icon-btn" id="btnPanel" title="打开悬浮控制面板" data-icon="spark"></button>
+          <button class="icon-btn" id="btnRefresh" title="刷新设备状态" data-icon="refresh"></button>
+          <button class="icon-btn" id="btnOptions" title="设置" data-icon="settings"></button>
+        </header>
+
+        <section class="device" id="cardUnset">
+          <div class="device__icon" data-icon="link"></div>
+          <div class="device__body">
+            <div class="device__title">还没有连接音箱</div>
+            <div class="device__desc">填写 R1 的 IP，浏览器一打开就自动连上</div>
+          </div>
+          <button class="pill pill--accent" id="btnSetup">去设置</button>
+        </section>
+
+        <section class="device" id="cardOffline" hidden>
+          <div class="device__icon" data-icon="unlink"></div>
+          <div class="device__body">
+            <div class="device__title" id="offlineTitle">连接已断开</div>
+            <div class="device__desc" id="offlineDesc">—</div>
+          </div>
+          <button class="pill" id="btnReconnect">重连</button>
+        </section>
+
+        <section class="dial">
+          <div class="knob" id="knob">
+            <div class="knob__fill"></div>
+            <div class="knob__inner">
+              <div class="knob__num" id="knobNum">--</div>
+              <div class="knob__sub" id="knobSub">等待连接</div>
+              <div class="knob__hint">拖动 / 滚轮 / 方向键</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slider">
+          <div class="slider__head">
+            <span>音量</span>
+            <span class="slider__read" id="sliderRead">-- / --</span>
+          </div>
+          <input type="range" id="slider" min="0" max="15" step="1" value="0" />
+        </section>
+
+        <section class="presets" id="presets"></section>
+
+        <section class="quick">
+          <button class="pill" id="btnDown" title="减小音量">− <span id="stepLabel">1</span></button>
+          <button class="pill pill--accent pill--icon" id="btnMute" title="静音 / 恢复音量" data-icon="volume"></button>
+          <button class="pill" id="btnUp" title="增大音量">+ <span id="stepLabel2">1</span></button>
+        </section>
+
+        <section class="quick quick--steps" id="steps">
+          <span class="label" style="margin: 0">步长</span>
+        </section>
+
+        <footer class="footer">
+          <button class="link" id="btnPanel2" data-icon="spark">悬浮面板</button>
+          <button class="link" id="btnRefresh2" data-icon="refresh">刷新状态</button>
+        </footer>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../common/constants.js"></script>
+    <script src="../common/ui.js"></script>
+    <script src="../common/connector.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

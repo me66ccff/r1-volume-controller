@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>R1 音量连接桥</title>
+  </head>
+  <body>
+    <!--
+      这个页面在屏幕外运行（chrome.offscreen），只做一件事：
+      长期持有与 R1 音箱的 WebSocket 连接。
+      service worker 会在 30 秒空闲后休眠，而 offscreen 文档会一直存活，
+      所以「全局唯一的一条连接」放在这里最稳。
+    -->
+    <script src="../common/constants.js"></script>
+    <script src="offscreen.js"></script>
+  </body>
+</html>

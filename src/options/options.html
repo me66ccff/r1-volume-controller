@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R1 音箱音量控制器 · 设置</title>
+    <link rel="stylesheet" href="../common/ui.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body class="options">
+    <div class="r1-app">
+      <div class="wrap">
+        <header class="head">
+          <div class="logo" data-icon="volume"></div>
+          <div class="head__text">
+            <h1>R1 音箱音量控制器</h1>
+            <p id="headSub">填写音箱地址，浏览器一打开就自动连上。</p>
+          </div>
+          <span class="badge" id="connBadge"><span class="dot" id="dot"></span><span id="badgeText">检测中…</span></span>
+        </header>
+
+        <section class="card">
+          <div class="card__head">
+            <h2>音箱连接</h2>
+            <span class="card__hint" id="wantIp">例如 192.168.1.12</span>
+          </div>
+          <div class="row">
+            <input class="text-input" id="ip" type="text" inputmode="decimal" placeholder="音箱 IP，例如 192.168.1.12" autocomplete="off" spellcheck="false" />
+            <button class="pill pill--accent" id="btnConnect">连接</button>
+          </div>
+          <div class="row row--wrap actions">
+            <button class="pill" id="btnAuto">自动查找音箱</button>
+            <button class="pill" id="btnPing">测试连接</button>
+            <span class="spin" id="scanSpin"></span>
+            <span class="muted" id="scanHint">在同网段内扫描 8080 端口，通常 3~8 秒。</span>
+          </div>
+          <pre class="log" id="log" hidden></pre>
+          <ul class="findings" id="findings" hidden></ul>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2>使用习惯</h2>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="autoConnect" />
+            <span class="switch__ui"></span>
+            <span class="switch__text"><b>随浏览器启动自动连接</b><i>打开浏览器就接管音箱，不用点任何东西</i></span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="showOrb" />
+            <span class="switch__ui"></span>
+            <span class="switch__text"><b>在网页右下角显示悬浮球</b><i>任意网页点一下就能调音（默认关闭，避免打扰）</i></span>
+          </label>
+          <div class="field">
+            <div class="label">音量步长（上下按钮 / 快捷键每次增减几级）</div>
+            <div class="chips" id="stepChips"></div>
+          </div>
+          <div class="field">
+            <div class="label">音量上限（设备会告知真实上限，一般无需修改）</div>
+            <div class="row">
+              <input class="text-input text-input--num" id="maxVol" type="number" min="1" max="60" step="1" />
+              <button class="pill" id="btnSaveMax">保存上限</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2>快捷键</h2>
+            <button class="link" id="btnKeys">在浏览器中修改</button>
+          </div>
+          <div class="keys">
+            <div class="keys__row"><kbd>Alt</kbd><kbd>Shift</kbd><kbd>V</kbd><span>打开 / 关闭悬浮面板</span></div>
+            <div class="keys__row"><kbd>Alt</kbd><kbd>Shift</kbd><kbd>↑</kbd><span>音量 +1</span></div>
+            <div class="keys__row"><kbd>Alt</kbd><kbd>Shift</kbd><kbd>↓</kbd><span>音量 −1</span></div>
+            <div class="keys__row"><kbd>M</kbd><span>面板 / 弹窗内：静音切换</span></div>
+            <div class="keys__row"><kbd>↑</kbd><kbd>↓</kbd><span>面板 / 弹窗内：加减音量</span></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2>数据</h2>
+          </div>
+          <div class="row row--wrap actions">
+            <button class="pill" id="btnExport">导出配置</button>
+            <button class="pill" id="btnImport">导入配置</button>
+            <button class="pill" id="btnReset">恢复默认</button>
+            <span class="muted" id="saveHint"></span>
+          </div>
+          <textarea class="textarea" id="configBox" spellcheck="false" placeholder="点击“导出配置”后会在这里生成 JSON，粘贴 JSON 后点“导入配置”即可恢复。"></textarea>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2>后台诊断</h2>
+            <div class="row" style="gap: 6px">
+              <button class="link" id="btnDiag">刷新</button>
+              <button class="link" id="btnResetBridge">重建连接桥</button>
+            </div>
+          </div>
+          <pre class="log" id="diag" style="display: block">正在读取…</pre>
+          <p class="about" style="font-size: 11.5px">
+            连不上时把这段截图发出来即可定位：<b>replies</b> 不增长说明后台没在应答；
+            <b>bridge=false</b> 说明连接桥没建起来；<b>lastError</b> 通常直接写明原因。
+          </p>
+        </section>
+
+        <section class="card card--about">
+          <div class="card__head">
+            <h2>关于</h2>
+          </div>
+          <p class="about">
+            通过 EchoService 的 WebSocket 接口（<code>ws://音箱IP:8080</code>）控制 R1 音箱，协议与官方控制页一致：
+            <code>get_info</code> 读取状态、<code>max_vol</code> 读取上限、<code>set_vol</code> 设置音量。
+          </p>
+          <ul class="about about--list">
+            <li>全局唯一：所有入口（弹窗 / 悬浮面板 / 悬浮球 / 快捷键）都走同一条连接与同一个队列，不会互相打架。</li>
+            <li>开机即用：连接跑在屏幕外文档里，浏览器启动后自动重连，图标角标实时显示音量。</li>
+            <li>隐私：扩展只与你在上面填写的音箱地址通信，不发送任何数据到互联网。</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../common/constants.js"></script>
+    <script src="../common/ui.js"></script>
+    <script src="../common/connector.js"></script>
+    <script src="scanner.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

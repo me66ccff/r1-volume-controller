@@ -1,0 +1,110 @@
+html,
+body.panel {
+  width: 100%;
+  height: 100%;
+}
+
+body.panel {
+  overflow: hidden;
+}
+
+.panel .r1-app {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 14px 10px;
+}
+
+.panel .r1-app::-webkit-scrollbar {
+  width: 8px;
+}
+
+.panel .r1-app::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+}
+
+.panel .r1-app::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel .top {
+  cursor: grab;
+}
+
+.panel .top:active {
+  cursor: grabbing;
+}
+
+.panel .top .icon-btn {
+  cursor: pointer;
+}
+
+.panel .knob {
+  width: 172px;
+  height: 172px;
+}
+
+.panel .quick--steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.now__ctrl {
+  display: flex;
+  gap: 5px;
+  flex: 0 0 auto;
+}
+
+.now__ctrl .icon-btn {
+  width: 28px;
+  height: 28px;
+}
+
+.now__ctrl .icon-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+#btnMute svg {
+  width: 15px;
+  height: 15px;
+}
+
+.info {
+  border: 1px solid var(--r1-line);
+  border-radius: var(--r1-radius);
+  background: var(--r1-card);
+  padding: 9px 10px 10px;
+}
+
+.info__grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 10px;
+  font-size: 11.5px;
+}
+
+.info__k {
+  color: var(--r1-text-faint);
+  white-space: nowrap;
+}
+
+.info__v {
+  color: var(--r1-text-dim);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer__btns {
+  display: flex;
+  gap: 2px;
+}
+
+.pill[hidden] {
+  display: none;
+}

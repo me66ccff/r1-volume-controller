@@ -1,0 +1,64 @@
+{
+  "manifest_version": 3,
+  "name": "R1 音箱音量控制器",
+  "short_name": "R1 音量",
+  "version": "1.0.0",
+  "description": "浏览器开机即连 R1 音箱：全局唯一的音量控制中枢，支持旋钮/滑杆调音、实时音量显示、静音、预设与设备信息。",
+  "minimum_chrome_version": "116",
+  "offline_enabled": true,
+  "default_locale": "zh_CN",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "R1 音箱音量控制器",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "src/options/options.html",
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["src/content/content.js"],
+      "css": ["src/content/content.css"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "permissions": [
+    "storage",
+    "alarms",
+    "offscreen",
+    "tabs",
+    "system.network"
+  ],
+  "host_permissions": ["*://*/*"],
+  "commands": {
+    "toggle-panel": {
+      "suggested_key": { "default": "Alt+Shift+V" },
+      "description": "打开/关闭悬浮控制面板"
+    },
+    "vol-up": {
+      "suggested_key": { "default": "Alt+Shift+Up" },
+      "description": "音量 +1"
+    },
+    "vol-down": {
+      "suggested_key": { "default": "Alt+Shift+Down" },
+      "description": "音量 -1"
+    },
+    "toggle-mute": {
+      "description": "静音 / 恢复音量"
+    }
+  }
+}

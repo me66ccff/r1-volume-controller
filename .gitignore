@@ -1,0 +1,21 @@
+# 依赖与构建产物都不入库（本项目零运行时依赖）
+node_modules/
+*.zip
+*.crx
+*.pem
+*.key
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 测试与调试临时文件
+_test-trace.txt
+_dbg.txt
+_dbgs/
+tools/_*.js
+tools/preview/
+.ssh-tmp/

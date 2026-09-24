@@ -1,0 +1,40 @@
+html,
+body.popup {
+  width: 360px;
+}
+
+body.popup {
+  overflow: hidden;
+}
+
+.popup .r1-app {
+  padding: 12px 14px 11px;
+}
+
+.popup .knob {
+  width: 158px;
+  height: 158px;
+}
+
+.popup .knob__num {
+  font-size: 42px;
+}
+
+.popup .quick--steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.popup .footer {
+  justify-content: space-between;
+}
+
+#btnMute svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pill[hidden] {
+  display: none;
+}

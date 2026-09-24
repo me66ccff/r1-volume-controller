@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R1 音箱 · 悬浮控制面板</title>
+    <link rel="stylesheet" href="../common/ui.css" />
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body class="panel">
+    <div class="r1-app" id="app" data-state="disabled">
+      <div class="stack">
+        <header class="top" id="dragbar" title="按住拖动窗口">
+          <div class="top__id">
+            <div class="logo" data-icon="volume"></div>
+            <div class="top__text">
+              <div class="top__name" id="deviceName">R1 音箱</div>
+              <div class="top__meta">
+                <span class="dot" id="dot"></span>
+                <span id="statusText">正在初始化…</span>
+                <span class="spin" id="spin"></span>
+              </div>
+            </div>
+          </div>
+          <button class="icon-btn" id="btnOptions" title="设置" data-icon="settings"></button>
+          <button class="icon-btn" id="btnClose" title="关闭面板" data-icon="close"></button>
+        </header>
+
+        <section class="device" id="cardUnset">
+          <div class="device__icon" data-icon="link"></div>
+          <div class="device__body">
+            <div class="device__title">还没有连接音箱</div>
+            <div class="device__desc">填写 R1 的 IP，浏览器一打开就自动连上</div>
+          </div>
+          <button class="pill pill--accent" id="btnSetup">去设置</button>
+        </section>
+
+        <section class="device" id="cardOffline" hidden>
+          <div class="device__icon" data-icon="unlink"></div>
+          <div class="device__body">
+            <div class="device__title" id="offlineTitle">连接已断开</div>
+            <div class="device__desc" id="offlineDesc">—</div>
+          </div>
+          <button class="pill" id="btnReconnect">重连</button>
+        </section>
+
+        <section class="dial">
+          <div class="knob" id="knob">
+            <div class="knob__fill"></div>
+            <div class="knob__inner">
+              <div class="knob__num" id="knobNum">--</div>
+              <div class="knob__sub" id="knobSub">等待连接</div>
+              <div class="knob__hint">拖动 / 滚轮 / 方向键 / 双击静音</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slider">
+          <div class="slider__head">
+            <span>音量</span>
+            <span class="slider__read" id="sliderRead">-- / --</span>
+          </div>
+          <input type="range" id="slider" min="0" max="15" step="1" value="0" />
+        </section>
+
+        <section class="presets" id="presets"></section>
+
+        <section class="quick">
+          <button class="pill" id="btnDown" title="减小音量">− <span id="stepLabel">1</span></button>
+          <button class="pill pill--accent pill--icon" id="btnMute" title="静音 / 恢复音量" data-icon="volume"></button>
+          <button class="pill" id="btnUp" title="增大音量">+ <span id="stepLabel2">1</span></button>
+        </section>
+
+        <section class="quick quick--steps" id="steps">
+          <span class="label" style="margin: 0">步长</span>
+        </section>
+
+        <section class="now" id="now">
+          <div class="now__art" data-icon="note"></div>
+          <div class="now__body">
+            <div class="now__title" id="nowTitle">暂无播放信息</div>
+            <div class="now__artist" id="nowArtist">—</div>
+          </div>
+          <div class="now__ctrl">
+            <button class="icon-btn" id="btnPrev" title="上一首" data-icon="prev"></button>
+            <button class="icon-btn" id="btnPlay" title="播放" data-icon="play"></button>
+            <button class="icon-btn" id="btnNext" title="下一首" data-icon="next"></button>
+          </div>
+        </section>
+
+        <section class="info" id="info">
+          <div class="label">设备信息</div>
+          <div class="info__grid">
+            <div class="info__k">音箱名称</div>
+            <div class="info__v" id="infoHost">—</div>
+            <div class="info__k">地址</div>
+            <div class="info__v" id="infoIp">—</div>
+            <div class="info__k">音量</div>
+            <div class="info__v" id="infoVol">—</div>
+            <div class="info__k">播放状态</div>
+            <div class="info__v" id="infoPlay">—</div>
+            <div class="info__k">播放模式</div>
+            <div class="info__v" id="infoMode">—</div>
+            <div class="info__k">EchoService</div>
+            <div class="info__v" id="infoVer">—</div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span class="footer__note" id="footerNote">—</span>
+          <div class="footer__btns">
+            <button class="link" id="btnRefresh" data-icon="refresh">刷新</button>
+            <button class="link" id="btnReboot" data-icon="power">重启服务</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../common/constants.js"></script>
+    <script src="../common/ui.js"></script>
+    <script src="../common/connector.js"></script>
+    <script src="panel.js"></script>
+  </body>
+</html>
